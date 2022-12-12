@@ -20,9 +20,22 @@ const runAPIs = async() => {
     const productsCollection = database.collection("products");
 
     app.get('/products', async(req, res)=>{
-      const result = await productsCollection.find({}).toArray();
+      const result = await productsCollection.find({}).sort({_id:-1}).toArray();
       res.json(result);
-    })
+    });
+
+    // post new product
+    app.post('/add_product', async(req, res)=>{
+      const result = await productsCollection.insertOne(req.body);
+      res.json(result);
+    });
+
+    // delete product
+    app.delete('/delete_product/:id', async(req, res)=> {
+      const query = {_id : objectId(req.params)};
+      const resut = await productsCollection.deleteOne(query);
+      res.json(resut);
+    });
 
   }finally{
 
