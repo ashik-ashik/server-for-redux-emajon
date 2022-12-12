@@ -19,8 +19,13 @@ const runAPIs = async() => {
     const database = client.db('redux-emajon');
     const productsCollection = database.collection("products");
 
-    app.get('/products', async(req, res)=>{
+    app.get('/products/', async(req, res)=>{
       const result = await productsCollection.find({}).sort({_id:-1}).toArray();
+      res.json(result);
+    });
+    app.get('/products/:id', async(req, res)=>{
+      const query = {_id : objectId(req.params)};
+      const result = await productsCollection.find(query).toArray();
       res.json(result);
     });
 
