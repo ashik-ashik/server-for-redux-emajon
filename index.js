@@ -25,7 +25,7 @@ const runAPIs = async() => {
     });
     app.get('/products/:id', async(req, res)=>{
       const query = {_id : objectId(req.params)};
-      const result = await productsCollection.find(query).toArray();
+      const result = await productsCollection.find(query);
       res.json(result);
     });
 
@@ -54,4 +54,4 @@ app.get('/', (req, res) => {
 
 app.listen(port, ()=>{
   console.log('Server is Running!!');
-})
+});
