@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const objectId = require("mongodb").ObjectId;
 
 const app = express();
@@ -23,15 +23,22 @@ const runAPIs = async() => {
       const result = await productsCollection.find({}).sort({_id:-1}).toArray();
       res.json(result);
     });
-    app.get('/products/:id', async(req, res)=>{
+    app.get('/product/:id', async(req, res)=>{
       const query = {_id : objectId(req.params)};
-      const result = await productsCollection.find(query);
+      const result = await productsCollection.findOne(query);
       res.json(result);
     });
 
     // post new product
     app.post('/add_product', async(req, res)=>{
       const result = await productsCollection.insertOne(req.body);
+      res.json(result);
+    });
+    // updaate product
+    app.put('/edit_product/:id', async(req, res)=>{
+      const query = {_id : ObjectId(req.params.id)};
+      const update = {$set : req.body};
+      const result = await productsCollection.updateOne(query, update);
       res.json(result);
     });
 
